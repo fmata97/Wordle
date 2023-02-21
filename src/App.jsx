@@ -4,15 +4,10 @@ import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
 
-// Possible letter placements
-const CORRECT = 0;
-const PRESENT = 1;
-const ABSENT = 2;
-
 class Letter {
     constructor() {
         this.letter = "";
-        this.placement = undefined;
+        this.placement = "";
     }
 }
 
@@ -42,6 +37,58 @@ function App() {
         );
     }
 
+    function checkGuess(guess) {
+
+        // map that contains all the indexes of each letter in the solution
+        let letterMap = new Map();
+
+        Array.from(SOLUTION).forEach((letter, index) => {
+            if (letterMap.has(letter))
+                letterMap.set(letter, [...letterMap.get(letter), index]);
+            else
+                letterMap.set(letter, [index]);
+        });
+
+        console.log(letterMap);
+
+        // FIXME: doesn't work with solution = "EVEVE" and guesses like "VEVEV", "EEEVE"
+        return guess.map((letter, index) => {
+            if (!letterMap.has(letter.letter)) {
+                letter.placement = "absent";
+            }
+            else if (letterMap.has(letter.letter)) {
+                const solutionIndexes = letterMap.get(letter.letter);
+                if (solutionIndexes.length > 1) {  // Has multiple elements
+                    if (solutionIndexes.some(value => value === index)) {
+                        letter.placement = "correct";
+                        // the index has to be popped
+                        letterMap.set(letter.letter, solutionIndexes.filter(value => value !== index));
+                    } else {
+                        letter.placement = "present";
+                        letterMap.set(letter.letter, solutionIndexes.filter(value => value > index));
+                    }
+                } else if (solutionIndexes.length === 1) {  // Has 1 element
+                    if (solutionIndexes[0] === index) {
+                        // the letter is in the right spot
+                        letter.placement = "correct";
+                        letterMap.delete(letter.letter);
+                    } else if (guess[solutionIndexes[0]].letter === letter.letter) {
+                        // this letter isn't in the right spot, but other letter is
+                        letter.placement = "absent";
+                    } else {
+                        // the letter isn't in the right spot, but neither are any other,
+                        // so it is marked as present and the solution index is popped
+                        letter.placement = "present";
+                        letterMap.delete(letter.letter);
+                    }
+                }
+            }
+
+            console.log(letterMap);
+            return letter;
+        })
+    }
+
     function keydownHandler(event) {
         console.log(event.key);
         const keyPressed = event.key;
@@ -49,11 +96,21 @@ function App() {
         if (keyPressed === "Enter") {
             if (currentLetterIndex === 5) {
                 // TODO: evaluate word
+                setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
+                    if (index === currentGuess)
+                        return checkGuess(guess);
+
+                    return guess;
+                }));
+
                 setCurrentGuess(oldCurrentGuess => oldCurrentGuess < 5
                     ? oldCurrentGuess + 1
                     : oldCurrentGuess);
+
+                currentLetterIndex = 0;
+                console.log(currentLetterIndex);
             } else {
-                alert("Fill all 5 letters!");
+                alert("Not enough letters!");
             }
         } else if (keyPressed === "Backspace") {
             if (currentLetterIndex > 0) {
@@ -67,6 +124,7 @@ function App() {
             console.log(keyPressed.charCodeAt(0));
             if (currentLetterIndex < 5) {
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
+                    console.log("current guess", currentGuess);
                     if (index === currentGuess)
                         guess[currentLetterIndex++].letter = keyPressed.toUpperCase();
                     return guess;
@@ -76,9 +134,9 @@ function App() {
     }
 
     useEffect(() => {
-        addEventListener("keyup", keydownHandler);
-        return () => removeEventListener("keyup", keydownHandler);
-    }, []);
+        addEventListener("keydown", keydownHandler);
+        return () => removeEventListener("keydown", keydownHandler);
+    }, [currentGuess]);
 
     console.log(guesses, currentLetterIndex, currentGuess);
 
