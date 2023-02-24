@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
+import {words} from '../words.json'
 
 class Letter {
     constructor() {
@@ -11,14 +12,14 @@ class Letter {
     }
 }
 
-const SOLUTION = "KIOSK";
-
 function App() {
     const [guesses, setGuesses] = useState(() => initializeGuesses()); // lazy initialization
     const [currentGuess, setCurrentGuess] = useState(0); // [0, 5]
-    const [solution, setSolution] = useState(""); // 5 letter word
+    const [currentLetterIndex, setCurrentLetterIndex] = useState(0); // [0, 4]
+    const [solution, setSolution] = useState(() => 
+        words[Math.floor(Math.random()*words.length)].toUpperCase()); // 5 letter word
+    const [wordle, setWordle] = useState(false);
 
-    let currentLetterIndex = 0; // [0, 4]
 
     function initializeGuesses() {
         let newArray = Array(6);
@@ -42,7 +43,7 @@ function App() {
         // map that contains all the indexes of each letter in the solution
         let letterMap = new Map();
 
-        Array.from(SOLUTION).forEach((letter, index) => {
+        Array.from(solution).forEach((letter, index) => {
             if (letterMap.has(letter))
                 letterMap.set(letter, [...letterMap.get(letter), index]);
             else
@@ -52,7 +53,7 @@ function App() {
         console.log(letterMap);
 
         // FIXME: doesn't work with solution = "EVEVE" and guesses like "VEVEV", "EEEVE"
-        return guess.map((letter, index) => {
+        const checkedGuesses = guess.map((letter, index) => {
             if (!letterMap.has(letter.letter)) {
                 letter.placement = "absent";
             }
@@ -87,6 +88,11 @@ function App() {
             console.log(letterMap);
             return letter;
         })
+
+        if (letterMap.size === 0)
+            setWordle(true);
+
+        return checkedGuesses;
     }
 
     function keydownHandler(event) {
@@ -95,7 +101,12 @@ function App() {
 
         if (keyPressed === "Enter") {
             if (currentLetterIndex === 5) {
-                // TODO: evaluate word
+                const guess = guesses[currentGuess].map(letter => letter.letter).join("").toLowerCase();
+
+                // check if word is valid
+                if (!words.some(word => word == guess))
+                    return;
+
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
                     if (index === currentGuess)
                         return checkGuess(guess);
@@ -103,11 +114,9 @@ function App() {
                     return guess;
                 }));
 
-                setCurrentGuess(oldCurrentGuess => oldCurrentGuess < 5
-                    ? oldCurrentGuess + 1
-                    : oldCurrentGuess);
+                setCurrentGuess(oldCurrentGuess => oldCurrentGuess + 1);
 
-                currentLetterIndex = 0;
+                setCurrentLetterIndex(0);
                 console.log(currentLetterIndex);
             } else {
                 alert("Not enough letters!");
@@ -115,8 +124,10 @@ function App() {
         } else if (keyPressed === "Backspace") {
             if (currentLetterIndex > 0) {
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
-                    if (index === currentGuess)
-                        guess[--currentLetterIndex].letter = "";
+                    if (index === currentGuess) {
+                        guess[currentLetterIndex - 1].letter = "";
+                        setCurrentLetterIndex(oldValue => oldValue - 1);
+                    }
                     return guess;
                 }));
             }
@@ -125,20 +136,33 @@ function App() {
             if (currentLetterIndex < 5) {
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
                     console.log("current guess", currentGuess);
-                    if (index === currentGuess)
-                        guess[currentLetterIndex++].letter = keyPressed.toUpperCase();
+                    if (index === currentGuess) {
+                        guess[currentLetterIndex].letter = keyPressed.toUpperCase();
+                        setCurrentLetterIndex(oldValue => oldValue + 1);
+                    }
                     return guess;
                 }));
             }
         }
     }
 
-    useEffect(() => {
-        addEventListener("keydown", keydownHandler);
-        return () => removeEventListener("keydown", keydownHandler);
-    }, [currentGuess]);
+    function endGame() {
+        if (wordle) {
 
-    console.log(guesses, currentLetterIndex, currentGuess);
+        } else {
+
+        }
+    }
+
+    useEffect(() => {
+        if (currentGuess <= 5 && !wordle)
+            addEventListener("keydown", keydownHandler);
+        else
+            endGame();
+        return () => removeEventListener("keydown", keydownHandler);
+    }, [currentLetterIndex]);
+
+    console.log(guesses, currentLetterIndex, currentGuess, solution);
 
     return (
         <div className="App">
@@ -146,15 +170,18 @@ function App() {
             <hr />
             <div className="Game-container">
                 <div className="Board-container">
+                    {currentGuess === 6 && !wordle && <h4>Solution: {solution}</h4>}
                     <Board
-                        solution={SOLUTION}
                         guesses={guesses}
                     />
                 </div>
                 <div className="Keyboard-container">
                     <Keyboard
-                        solution={SOLUTION}
                         guesses={guesses}
+                        insertLetter={(event) => {
+                            if (currentGuess <= 5 && !wordle)
+                                keydownHandler(event);
+                        }}
                     />
                 </div>
             </div>

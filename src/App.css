@@ -15,7 +15,7 @@ nav, .Navbar {
     align-items: center;
 }
 
-h1 {
+h1, h2 {
     margin: auto;
 }
 
@@ -38,10 +38,19 @@ hr {
     user-select: none;
 }
 
-.Board-container {
+.Board-container > h4 {
+    color: white;
+    position: absolute;
+    top: -3%;
+    text-align: center;
     width: 100%;
-    height: 550px;
-    margin: auto;
+}
+
+.Board-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    margin: 2rem 0 0 0;
 }
 
 .Board {
@@ -71,17 +80,54 @@ hr {
     font-size: 2rem;
 }
 
-.tile.absent {
+.tile.absent, .key.absent {
     background-color: #3a3a3c;
     border: none;
 }
 
-.tile.correct {
+.tile.correct, .key.correct {
     background-color: #538d4e;
     border: none;
 }
 
-.tile.present {
+.tile.present, .key.present {
     background-color: #b59f3b;
     border: none;
+}
+
+.Keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    font-family: 'Libre Franklin', sans-serif;
+}
+
+.KeyboardRow {
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.Keyboard-container {
+    margin: 1rem 0 0 0;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #818384;
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 5px;
+    padding: 0px 6px;
+    cursor: pointer;
+    border-radius: 0.2rem;
+    min-width: 2.7rem;
+    min-height: 3.5rem;
+}
+
+.KeyboardRow>.key:last-child {
+    margin-right: 0px;
 }
