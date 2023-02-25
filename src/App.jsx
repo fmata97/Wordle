@@ -19,6 +19,7 @@ function App() {
     const [solution, setSolution] = useState(() => 
         words[Math.floor(Math.random()*words.length)].toUpperCase()); // 5 letter word
     const [wordle, setWordle] = useState(false);
+    const [popupText, setPopupText] = useState("");
 
 
     function initializeGuesses() {
@@ -104,8 +105,10 @@ function App() {
                 const guess = guesses[currentGuess].map(letter => letter.letter).join("").toLowerCase();
 
                 // check if word is valid
-                if (!words.some(word => word == guess))
+                if (!words.some(word => word == guess)) {
+                    popup("Not in word list!");
                     return;
+                }
 
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
                     if (index === currentGuess)
@@ -119,13 +122,14 @@ function App() {
                 setCurrentLetterIndex(0);
                 console.log(currentLetterIndex);
             } else {
-                alert("Not enough letters!");
+                popup("Not enough letters!");
             }
         } else if (keyPressed === "Backspace") {
             if (currentLetterIndex > 0) {
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
                     if (index === currentGuess) {
                         guess[currentLetterIndex - 1].letter = "";
+                        guess[currentLetterIndex - 1].placement = "";
                         setCurrentLetterIndex(oldValue => oldValue - 1);
                     }
                     return guess;
@@ -138,6 +142,7 @@ function App() {
                     console.log("current guess", currentGuess);
                     if (index === currentGuess) {
                         guess[currentLetterIndex].letter = keyPressed.toUpperCase();
+                        guess[currentLetterIndex].placement = "inserted";
                         setCurrentLetterIndex(oldValue => oldValue + 1);
                     }
                     return guess;
@@ -148,9 +153,18 @@ function App() {
 
     function endGame() {
         if (wordle) {
-
+            popup("You won!");
         } else {
+            popup("You lost...");
+        }
+    }
 
+    function popup(text) {
+        if (!popupText) {
+            setPopupText(text);
+            setTimeout(() => {
+                setPopupText("");
+            }, 1200);
         }
     }
 
@@ -170,6 +184,7 @@ function App() {
             <hr />
             <div className="Game-container">
                 <div className="Board-container">
+                    {popupText && <div className="popup">{popupText}</div>}
                     {currentGuess === 6 && !wordle && <h4>Solution: {solution}</h4>}
                     <Board
                         guesses={guesses}

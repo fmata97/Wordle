@@ -28,7 +28,7 @@ hr {
 
 .Game-container {
     width: 500px;
-    height: 750px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,7 +41,7 @@ hr {
 .Board-container > h4 {
     color: white;
     position: absolute;
-    top: -3%;
+    top: 0%;
     text-align: center;
     width: 100%;
 }
@@ -51,6 +51,9 @@ hr {
     width: 100%;
     height: 450px;
     margin: 2rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .Board {
@@ -80,6 +83,12 @@ hr {
     font-size: 2rem;
 }
 
+
+.tile.inserted {
+    border-color: #565758;
+    animation: pop-out 0.1s linear 0s 1 backwards;
+}
+
 .tile.absent, .key.absent {
     background-color: #3a3a3c;
     border: none;
@@ -93,6 +102,12 @@ hr {
 .tile.present, .key.present {
     background-color: #b59f3b;
     border: none;
+}
+
+.tile.absent, .tile.correct, .tile.present {
+    transition: transform 0.5s ease-in;
+    transform-style: preserve-3d;
+    /* transform: rotateY(180deg); */
 }
 
 .Keyboard {
@@ -131,3 +146,44 @@ hr {
 .KeyboardRow>.key:last-child {
     margin-right: 0px;
 }
+
+.popup {
+    background-color: white;
+    border-radius: 8px;
+    width: fit-content;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    font-weight: normal;
+    margin: auto;
+    position: absolute;
+    z-index: 1;
+    animation: popup 1.2s ease-out 0ms 1 forwards;
+}
+
+@keyframes popup {
+    0% {
+        top: 0%;
+        opacity: 0%;
+    }
+
+    50%, 65%{
+        top: 8%;
+        opacity: 100%;
+    }
+
+    100% {
+        opacity: 0%;
+        top: 8%;
+    }
+}
+
+@keyframes pop-out {
+    0% {
+        scale: 1;
+    }
+
+    100% {
+        scale: 1.2;
+    }
+}
+

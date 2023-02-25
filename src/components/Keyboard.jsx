@@ -26,6 +26,10 @@ export default function Keyboard({guesses, insertLetter}) {
             && (letter.placement === "present" || letter.placement === "absent"))
                 return;
 
+            // being inserted doesn't match a placement on the keyboard
+            if (letter.placement === "inserted")
+                return;
+
             if (letter.letter !== "" && letter.placement !== "")
                 placementsMap.set(letter.letter, letter.placement);
         })
