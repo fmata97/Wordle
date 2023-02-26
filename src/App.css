@@ -80,12 +80,10 @@ hr {
     position: relative;
     width: 62px;
     height: 62px;
-    border: 1px solid #3a3a3c;
     font-size: 2rem;
 }
 
-
-.tile.inserted {
+.front-face.inserted {
     border-color: #565758;
     animation: pop-out 0.1s linear 0s 1 backwards;
 }
@@ -147,6 +145,7 @@ hr {
     justify-content: center;
     align-items: center;
     backface-visibility: hidden;
+    border: 1px solid #3a3a3c;
 }
 
 .back-face {

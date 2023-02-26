@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import { initializeGuesses, isLetter, winText } from './functions'
 import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
 import { words } from '../words.json'
 
-class Letter {
-    constructor() {
-        this.letter = "";
-        this.placement = "";
-    }
-}
 
 function App() {
     const [guesses, setGuesses] = useState(() => initializeGuesses()); // lazy initialization
@@ -21,23 +16,6 @@ function App() {
     const [wordle, setWordle] = useState(false);
     const [popupText, setPopupText] = useState("");
 
-
-    function initializeGuesses() {
-        let newArray = Array(6);
-        for (let i = 0; i < 6; i++) {
-            newArray[i] = Array(5);
-            for (let j = 0; j < 5; j++) newArray[i][j] = new Letter();
-        }
-
-        return newArray;
-    }
-
-    function isLetter(string) {
-        return string.length === 1 && (
-            ('a'.charCodeAt(0) <= string.charCodeAt(0) && string.charCodeAt(0) <= 'z'.charCodeAt(0))
-            || ('A'.charCodeAt(0) <= string.charCodeAt(0) && string.charCodeAt(0) <= 'Z'.charCodeAt(0))
-        );
-    }
 
     function checkGuess(guess) {
 
@@ -151,7 +129,8 @@ function App() {
         // wait for all letters to reveal
         setTimeout(() => {
             if (wordle) {
-                popup("You won!");
+                const text = winText(currentGuess - 1);
+                popup(text);
             } else {
                 popup("You lost...");
             }
