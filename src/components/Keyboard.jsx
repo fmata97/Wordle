@@ -61,7 +61,7 @@ export default function Keyboard({guesses, insertLetter}) {
                 <div className={`key ${placementsMap.get("L")}`} onClick={keyPress}>L</div>
             </div>
             <div className="KeyboardRow row3">
-                <div className={`key`} onClick={keyPress}>DEL</div>
+                <div className={`key enter-key`} onClick={keyPress}>ENTER</div>
                 <div className={`key ${placementsMap.get("Z")}`} onClick={keyPress}>Z</div>
                 <div className={`key ${placementsMap.get("X")}`} onClick={keyPress}>X</div>
                 <div className={`key ${placementsMap.get("C")}`} onClick={keyPress}>C</div>
@@ -69,7 +69,7 @@ export default function Keyboard({guesses, insertLetter}) {
                 <div className={`key ${placementsMap.get("B")}`} onClick={keyPress}>B</div>
                 <div className={`key ${placementsMap.get("N")}`} onClick={keyPress}>N</div>
                 <div className={`key ${placementsMap.get("M")}`} onClick={keyPress}>M</div>
-                <div className={`key`} onClick={keyPress}>ENTER</div>
+                <div className={`key delete-key`} onClick={keyPress}>DEL</div>
             </div>
         </div>
     )

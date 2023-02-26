@@ -1,5 +1,6 @@
 .App {
     user-select: none;
+    overflow: hidden;
 }
 
 nav, .Navbar {
@@ -199,6 +200,10 @@ hr {
     margin-right: 0px;
 }
 
+.key.delete-key {
+    padding: 0px 15px;
+}
+
 .popup {
     background-color: white;
     border-radius: 8px;
@@ -279,5 +284,19 @@ hr {
         min-width: 2rem;
         min-height: 2.6rem;
         font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .tile {
+        width: 53px;
+        height: 53px;
+        font-size: 1.5rem;
+    }
+    
+    .key {
+        min-width: 1.8rem;
+        min-height: 2.34rem;
+        font-size: 0.65rem;
     }
 }
