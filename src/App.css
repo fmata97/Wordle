@@ -1,5 +1,5 @@
 .App {
-
+    user-select: none;
 }
 
 nav, .Navbar {
@@ -35,15 +35,18 @@ hr {
     margin: auto;
     font-family: 'Libre Franklin', sans-serif;
     font-weight: 700;
-    user-select: none;
 }
 
+/* solution reveal */
 .Board-container > h4 {
     color: white;
     position: absolute;
     top: 0%;
     text-align: center;
     width: 100%;
+    opacity: 0%;
+    animation: reveal 1s linear 2s 1 forwards;
+    user-select: text;
 }
 
 .Board-container {
@@ -74,12 +77,10 @@ hr {
 }
 
 .tile {
+    position: relative;
     width: 62px;
     height: 62px;
     border: 1px solid #3a3a3c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     font-size: 2rem;
 }
 
@@ -89,25 +90,74 @@ hr {
     animation: pop-out 0.1s linear 0s 1 backwards;
 }
 
-.tile.absent, .key.absent {
+.back-face.absent, .key.absent {
     background-color: #3a3a3c;
     border: none;
 }
 
-.tile.correct, .key.correct {
+.back-face.correct, .key.correct {
     background-color: #538d4e;
     border: none;
 }
 
-.tile.present, .key.present {
+.back-face.present, .key.present {
     background-color: #b59f3b;
     border: none;
 }
 
 .tile.absent, .tile.correct, .tile.present {
-    transition: transform 0.5s ease-in;
+    transition: transform 0.3s ease-in;
     transform-style: preserve-3d;
-    /* transform: rotateY(180deg); */
+    transform: rotateX(180deg);
+    transition-delay: 0s;
+}
+
+.tile:nth-child(2) {
+    transition: transform 0.3s ease-in;
+    transition-delay: 0.25s;
+}
+
+.tile:nth-child(3) {
+    transition: transform 0.3s ease-in;
+    transition-delay: 0.55s;
+}
+
+.tile:nth-child(4) {
+    transition: transform 0.3s ease-in;
+    transition-delay: 0.85s;
+}
+
+.tile:nth-child(5) {
+    transition: transform 0.3s ease-in;
+    transition-delay: 1.15s;
+}
+
+/* to allow all letters to reveal its placement before the keyboard 
+    placement is revealed */
+.key.absent, .key.correct, .key.present {
+    transition: background-color 0s;
+    transition-delay: 1.50s;
+}
+
+.front-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+}
+
+.back-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    transform: rotateX(180deg);
 }
 
 .Keyboard {
@@ -187,3 +237,12 @@ hr {
     }
 }
 
+@keyframes reveal {
+    0% {
+        opacity: 0%;
+    }
+
+    100% {
+        opacity: 100%;
+    }
+}

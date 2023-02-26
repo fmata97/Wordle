@@ -3,7 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
-import {words} from '../words.json'
+import { words } from '../words.json'
 
 class Letter {
     constructor() {
@@ -16,8 +16,8 @@ function App() {
     const [guesses, setGuesses] = useState(() => initializeGuesses()); // lazy initialization
     const [currentGuess, setCurrentGuess] = useState(0); // [0, 5]
     const [currentLetterIndex, setCurrentLetterIndex] = useState(0); // [0, 4]
-    const [solution, setSolution] = useState(() => 
-        words[Math.floor(Math.random()*words.length)].toUpperCase()); // 5 letter word
+    const [solution, setSolution] = useState(() =>
+        words[Math.floor(Math.random() * words.length)].toUpperCase()); // 5 letter word
     const [wordle, setWordle] = useState(false);
     const [popupText, setPopupText] = useState("");
 
@@ -50,8 +50,6 @@ function App() {
             else
                 letterMap.set(letter, [index]);
         });
-
-        console.log(letterMap);
 
         // FIXME: doesn't work with solution = "EVEVE" and guesses like "VEVEV", "EEEVE"
         const checkedGuesses = guess.map((letter, index) => {
@@ -86,7 +84,6 @@ function App() {
                 }
             }
 
-            console.log(letterMap);
             return letter;
         })
 
@@ -97,11 +94,11 @@ function App() {
     }
 
     function keydownHandler(event) {
-        console.log(event.key);
         const keyPressed = event.key;
 
         if (keyPressed === "Enter") {
             if (currentLetterIndex === 5) {
+                // grab all guess letters and join them into a string
                 const guess = guesses[currentGuess].map(letter => letter.letter).join("").toLowerCase();
 
                 // check if word is valid
@@ -110,6 +107,7 @@ function App() {
                     return;
                 }
 
+                // check letter placements
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
                     if (index === currentGuess)
                         return checkGuess(guess);
@@ -117,10 +115,10 @@ function App() {
                     return guess;
                 }));
 
+                // move to the next guess
                 setCurrentGuess(oldCurrentGuess => oldCurrentGuess + 1);
 
                 setCurrentLetterIndex(0);
-                console.log(currentLetterIndex);
             } else {
                 popup("Not enough letters!");
             }
@@ -136,10 +134,8 @@ function App() {
                 }));
             }
         } else if (isLetter(keyPressed)) {
-            console.log(keyPressed.charCodeAt(0));
             if (currentLetterIndex < 5) {
                 setGuesses(oldGuesses => oldGuesses.map((guess, index) => {
-                    console.log("current guess", currentGuess);
                     if (index === currentGuess) {
                         guess[currentLetterIndex].letter = keyPressed.toUpperCase();
                         guess[currentLetterIndex].placement = "inserted";
@@ -152,11 +148,14 @@ function App() {
     }
 
     function endGame() {
-        if (wordle) {
-            popup("You won!");
-        } else {
-            popup("You lost...");
-        }
+        // wait for all letters to reveal
+        setTimeout(() => {
+            if (wordle) {
+                popup("You won!");
+            } else {
+                popup("You lost...");
+            }
+        }, 1500);
     }
 
     function popup(text) {
