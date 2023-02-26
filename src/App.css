@@ -29,6 +29,7 @@ hr {
 .Game-container {
     width: 500px;
     height: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,6 +54,7 @@ hr {
     position: relative;
     width: 100%;
     height: 450px;
+    max-width: 100%;
     margin: 2rem 0 0 0;
     display: flex;
     flex-direction: column;
@@ -173,6 +175,7 @@ hr {
 }
 
 .Keyboard-container {
+    max-width: 100%;
     margin: 1rem 0 0 0;
 }
 
@@ -243,5 +246,38 @@ hr {
 
     100% {
         opacity: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .Board-container > h4 {
+        top: -5%;
+    }
+
+    .Board-container {
+        height: 373px;
+        margin: 2rem 0;
+    }
+
+    .Board {
+        gap: 5px;
+        width: 310px;
+        height: 373px;
+    }
+
+    .row {
+        gap: 5px;
+    }
+
+    .tile {
+        width: 56px;
+        height: 56px;
+        font-size: 1.6rem;
+    }
+
+    .key {
+        min-width: 2rem;
+        min-height: 2.6rem;
+        font-size: 0.7rem;
     }
 }

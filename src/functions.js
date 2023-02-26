@@ -2,11 +2,19 @@
  *  Aux functions and definitions
  */
 
+import { words } from '../words.json'
+
 class Letter {
     constructor() {
         this.letter = "";
         this.placement = "";
     }
+}
+
+export function pickRandomWord() {
+    const pickedWord = words[Math.floor(Math.random() * words.length)].toUpperCase();
+    console.log("solution:", pickedWord);
+    return pickedWord;
 }
 
 export function initializeGuesses() {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import { initializeGuesses, isLetter, winText } from './functions'
+import { initializeGuesses, isLetter, pickRandomWord, winText } from './functions'
 import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
@@ -11,8 +11,7 @@ function App() {
     const [guesses, setGuesses] = useState(() => initializeGuesses()); // lazy initialization
     const [currentGuess, setCurrentGuess] = useState(0); // [0, 5]
     const [currentLetterIndex, setCurrentLetterIndex] = useState(0); // [0, 4]
-    const [solution, setSolution] = useState(() =>
-        words[Math.floor(Math.random() * words.length)].toUpperCase()); // 5 letter word
+    const [solution, setSolution] = useState(() => pickRandomWord()); // 5 letter word
     const [wordle, setWordle] = useState(false);
     const [popupText, setPopupText] = useState("");
 
@@ -154,7 +153,6 @@ function App() {
         return () => removeEventListener("keydown", keydownHandler);
     }, [currentLetterIndex]);
 
-    console.log(guesses, currentLetterIndex, currentGuess, solution);
 
     return (
         <div className="App">
