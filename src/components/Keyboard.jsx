@@ -26,6 +26,11 @@ export default function Keyboard({guesses, insertLetter}) {
             && (letter.placement === "present" || letter.placement === "absent"))
                 return;
 
+            // if the letter is already yellow, it can't go back to absent
+            if (placementsMap.has(letter.letter) && placementsMap.get(letter.letter) === "present"
+            && letter.placement === "absent")
+                return;
+
             // being inserted doesn't match a placement on the keyboard
             if (letter.placement === "inserted")
                 return;
