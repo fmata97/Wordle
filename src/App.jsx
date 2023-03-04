@@ -76,7 +76,7 @@ function App() {
         if (keyPressed === "Enter") {
             if (currentLetterIndex === 5) {
                 // grab all guess letters and join them into a string
-                const guess = guesses[currentGuess].map(letter => letter.letter).join("").toLowerCase();
+                const guess = guesses[currentGuess].map(letter => letter.letter).join("");
 
                 // check if word is valid
                 if (!words.some(word => word == guess)) {
