@@ -4,7 +4,7 @@ import { initializeGuesses, isLetter, pickRandomWord, winText } from './function
 import Navbar from './components/Navbar'
 import Board from './components/Board'
 import Keyboard from './components/Keyboard'
-import { words } from '../words.json'
+import { validGuesses } from '../guesses.json'
 
 
 function App() {
@@ -76,10 +76,10 @@ function App() {
         if (keyPressed === "Enter") {
             if (currentLetterIndex === 5) {
                 // grab all guess letters and join them into a string
-                const guess = guesses[currentGuess].map(letter => letter.letter).join("");
+                const guess = guesses[currentGuess].map(letter => letter.letter).join("").toLowerCase();
 
                 // check if word is valid
-                if (!words.some(word => word == guess)) {
+                if (!validGuesses.some(word => word == guess)) {
                     popup("Not in word list!");
                     return;
                 }
